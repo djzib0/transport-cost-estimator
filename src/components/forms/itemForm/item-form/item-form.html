@@ -1,0 +1,45 @@
+<form [formGroup]="itemForm" (ngSubmit)="submit()" class="max-w-lg mx-auto p-6 bg-white rounded-xl shadow-md space-y-6">
+  <h2 class="text-2xl font-semibold text-gray-700 mb-4">Transport Estimator</h2>
+
+  <!-- Name -->
+  <div class="flex flex-col">
+    <label class="mb-1 font-medium text-gray-600">Name</label>
+    <input type="text" formControlName="name" 
+           class="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+           placeholder="Enter item name">
+  </div>
+  <p>{{itemForm.value.name}}</p>
+
+  <div class="flex flex-col">
+    <label class="mb-1 font-medium text-gray-600">Width</label>
+    <input 
+        type="text" 
+        formControlName="width"
+        class="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+        placeholder="0"
+    >
+    
+  </div>
+
+  <!-- Length -->
+  <div class="flex flex-col">
+    <label class="mb-1 font-medium text-gray-600">Length (m)</label>
+    <input type="number" formControlName="length" 
+           class="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+           placeholder="0">
+  </div>
+
+  <!-- Width -->
+  <div class="flex flex-col">
+    <label class="mb-1 font-medium text-gray-600">Width (m)</label>
+    <input type="number" formControlName="width" 
+           class="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+           placeholder="0">
+  </div>
+
+  <!-- Submit Button -->
+  <button type="submit" 
+          class="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-md shadow-sm transition">
+    Calculate Transport Cost
+  </button>
+</form>
