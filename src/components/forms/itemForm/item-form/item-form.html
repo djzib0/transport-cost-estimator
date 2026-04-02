@@ -4,11 +4,14 @@
   <!-- Name -->
   <div class="flex flex-col">
     <label class="mb-1 font-medium text-gray-600">Name</label>
-    <input type="text" formControlName="name" 
-           class="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-           placeholder="Enter item name">
+    <input 
+        type="text" 
+        formControlName="name" 
+        class="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+        placeholder="Enter item name"
+        [class.border-red-500]="itemForm.get('name')?.invalid && itemForm.get('name')?.touched"
+    />
   </div>
-  <p>{{itemForm.value.name}}</p>
 
   <div class="flex flex-col">
     <label class="mb-1 font-medium text-gray-600">Width</label>
@@ -23,23 +26,37 @@
 
   <!-- Length -->
   <div class="flex flex-col">
-    <label class="mb-1 font-medium text-gray-600">Length (m)</label>
-    <input type="number" formControlName="length" 
-           class="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-           placeholder="0">
+    <label class="mb-1 font-medium text-gray-600">Length [mm]</label>
+    <input 
+        type="number" 
+        formControlName="length" 
+        class="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+        placeholder="0"
+        [class.border-red-500]="itemForm.get('length')?.invalid && itemForm.get('length')?.touched"
+    >
   </div>
 
-  <!-- Width -->
-  <div class="flex flex-col">
-    <label class="mb-1 font-medium text-gray-600">Width (m)</label>
-    <input type="number" formControlName="width" 
-           class="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-           placeholder="0">
-  </div>
+  @if (itemForm.get('length')?.invalid && itemForm.get('length')?.touched) {
+      <p
+        class="text-red-500 text-sm -mt-5"
+      >
+        Length is required
+      </p>
+    }
+  
 
   <!-- Submit Button -->
   <button type="submit" 
-          class="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-md shadow-sm transition">
+          class="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-md shadow-sm transition"
+          (click)="submit()"
+  >
     Calculate Transport Cost
   </button>
 </form>
+
+<p>
+  {{itemForm.value.gridWidth}}
+</p>
+<p>
+  {{itemForm.value.gridLength}}
+</p>
