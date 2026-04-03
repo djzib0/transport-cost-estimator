@@ -5,8 +5,8 @@ export interface ItemData {
     isStacked?: boolean | null;
     orderNumber?: string | null;
     clientOrderNumber?: string | null;
-    gridWidth?: number; // keeps the number of pallete fields in truck grid row A
-    gridLength?: number; // keeps the number of pallete fields in truck grid row B
+    gridWidth?: number | null; // keeps the number of pallete fields in truck grid row A
+    gridLength?: number | null; // keeps the number of pallete fields in truck grid row B
 }
 
 export interface Item {

@@ -2,14 +2,20 @@ import { FormControl, ReactiveFormsModule, FormGroup, Validators } from '@angula
 import { Component, signal, OnInit } from '@angular/core';
 import {form, FormField} from '@angular/forms/signals';
 import { ItemData } from '../../../../lib/interfaces';
+import { palletPlacePricePln } from '../../../../lib/data';
+import { CurrencyPipe } from '@angular/common';
+import { registerLocaleData } from '@angular/common';
+registerLocaleData(localePl);
+import localePl from '@angular/common/locales/pl';
 
 @Component({
   selector: 'app-item-form',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, CurrencyPipe],
   templateUrl: './item-form.html',
   styleUrl: './item-form.css',
 })
 export class ItemForm {
+
 
   itemModel = signal<ItemData>({
     name: 'kj',
@@ -18,9 +24,11 @@ export class ItemForm {
     isStacked: null,
     orderNumber: null,
     clientOrderNumber: null,
-    gridWidth: 1200,
-    gridLength: 1200
+    gridWidth: null,
+    gridLength: null
   })
+
+  palletPlacePricePln = signal(palletPlacePricePln)
 
   name = new FormControl('')
 
@@ -31,27 +39,23 @@ export class ItemForm {
     isStacked: new FormControl(null),
     orderNumber: new FormControl(null),
     clientOrderNumber: new FormControl(null),
-    gridWidth: new FormControl(1200),
-    gridLength: new FormControl(1200),
+    gridWidth: new FormControl(null),
+    gridLength: new FormControl(null),
   })
 
   ngOnInit() {
     this.itemForm.valueChanges.subscribe(val => {
-      console.log('Forms value changed:', val);
       this.calculateSpace();
     })
-    console.log(this.itemForm.value.gridWidth, "width ")
-    console.log(this.itemForm.value.gridLength, "length ")
   }
 
   submit(){
     if (this.itemForm.valid) {
-      console.log('Form value:', this.itemForm.value)
+      // console.log('Form value:', this.itemForm.value)
     }
   }
 
   calculateSpace() {
-    console.log(Math.floor(Number(this.itemForm.value.width) / 1200) + 1);
     const width = Number(this.itemForm.value.width);
     const length = Number(this.itemForm.value.length);
     const newGridWidthValue = Math.ceil(width / 1200);
@@ -67,6 +71,14 @@ export class ItemForm {
     if (currentgridLength !== newGridLengthValue) {
       this.itemForm.get('gridLength')?.setValue(newGridLengthValue, {emitEvent: false})
     }
+  }
+
+  createArray(size: number) {
+    return Array.from({length: Number(size)})
+  }
+
+  calculateTransportCost(width: number, length: number) {
+    return Number(width) * Number(length) * palletPlacePricePln;
   }
 
 }

@@ -54,9 +54,13 @@
   </button>
 </form>
 
-<p>
-  {{itemForm.value.gridWidth}}
-</p>
-<p>
-  {{itemForm.value.gridLength}}
-</p>
+<div class="flex flex-col gap-2">
+    Estimated transport cost is {{calculateTransportCost(itemForm.value.gridWidth, itemForm.value.gridLength) | currency:'PLN':'symbol':'1.2-2':'pl' }}
+    @for (item of  createArray(itemForm.value.gridWidth); track $index) {
+      <div class="flex gap-2">
+        @for (item of createArray(itemForm.value.gridLength); track $index) {
+          <div class="w-10 h-10 bg-green-300 rounded-md"></div>
+        }
+      </div>
+    }
+</div>
