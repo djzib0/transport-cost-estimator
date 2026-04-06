@@ -1,2 +1,65 @@
 <p>Below you can find an item form</p>
-<app-item-form></app-item-form>
+<app-item-form
+    (itemCreated)="addItem($event)"
+></app-item-form>
+
+<div class="max-w-4xl mx-auto space-y-2">
+
+  <!-- Header -->
+  <div class="grid grid-cols-6 gap-4 px-4 py-2 text-sm font-semibold text-gray-500 border-b">
+    <div>Name</div>
+    <div>Width</div>
+    <div>Length</div>
+    <div>Grid W</div>
+    <div>Grid L</div>
+    <div class="text-right">Actions</div>
+  </div>
+
+  <!-- Rows -->
+  @for (item of itemList(); track $index) {
+    <div class="grid grid-cols-6 gap-4 items-center px-4 py-3 bg-white rounded-lg shadow-sm hover:shadow-md transition">
+
+      <!-- Name -->
+      <div class="font-medium text-gray-800">
+        {{ item.name }}
+      </div>
+
+      <!-- Width -->
+      <div class="text-gray-600">
+        {{ item.width }} mm
+      </div>
+
+      <!-- Length -->
+      <div class="text-gray-600">
+        {{ item.length }} mm
+      </div>
+
+      <!-- Grid Width -->
+      <div class="text-blue-600 font-semibold">
+        {{ item.gridWidth }}
+      </div>
+
+      <!-- Grid Length -->
+      <div class="text-blue-600 font-semibold">
+        {{ item.gridLength }}
+      </div>
+
+      <!-- Actions -->
+      <div class="flex justify-end gap-2">
+        <button class="text-sm px-3 py-1 bg-gray-100 hover:bg-gray-200 rounded-md">
+          Edit
+        </button>
+        <button class="text-sm px-3 py-1 bg-red-100 text-red-600 hover:bg-red-200 rounded-md">
+          Delete
+        </button>
+      </div>
+
+    </div>
+  }
+</div>
+
+@for (truck of truckList(); track $index) {
+  <app-truck-layout></app-truck-layout>
+}
+
+<app-truck-layout></app-truck-layout>
