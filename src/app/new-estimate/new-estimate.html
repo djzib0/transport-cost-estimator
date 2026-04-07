@@ -38,11 +38,19 @@
       <div class="text-blue-600 font-semibold">
         {{ item.gridWidth }}
       </div>
-
       <!-- Grid Length -->
       <div class="text-blue-600 font-semibold">
         {{ item.gridLength }}
       </div>
+
+      <select name="trucks" id="trucks"
+        (change)="onTruckChange($event, $index)"
+      >
+        <option [value]="">----</option>
+        @for (truck of truckList(); track $index) {
+          <option [value]="truck.licensePlate">Truck {{$index + 1}}</option>
+        }
+      </select>
 
       <!-- Actions -->
       <div class="flex justify-end gap-2">
@@ -58,8 +66,13 @@
   }
 </div>
 
+<button 
+  class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow"
+  (click)="addTruck()"
+  >
+  Add truck
+</button>
+
 @for (truck of truckList(); track $index) {
   <app-truck-layout></app-truck-layout>
 }
-
-<app-truck-layout></app-truck-layout>

@@ -14,12 +14,12 @@ export class NewEstimate {
   itemList = signal<Item[]>([])
 
   truckList = signal<Truck[]>([
-    // {
-    //   licensePlate: "123 ABC",
-    //   rowA1: {
-    //     orderNumber: null
-    //   }
-    // }
+    {
+      licensePlate: "123 ABC",
+      rowA1: {
+        orderNumber: null
+      }
+    }
   ])
 
   addItem(item: Item) {
@@ -28,5 +28,28 @@ export class NewEstimate {
     const updatedItemList = [...currentItemList, item]; // adds new item
     this.itemList.set(updatedItemList);
   }
+
+  addTruck() {
+    this.truckList().push(
+      {
+      licensePlate: "345 XYZ",
+      rowA1: {
+        orderNumber: null
+      }
+    }
+    )
+  }
+
+  onTruckChange(event: Event, index: number) {
+    const value = (event.target as HTMLSelectElement).value;
+
+    this.itemList.update(list => 
+      list.map((item, i) =>
+      i === index ? {...item, truckNumber: value } : item
+      )
+    )
+    console.log(this.itemList())
+  }
+
 
 }
