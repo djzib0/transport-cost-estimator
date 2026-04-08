@@ -2,6 +2,7 @@ import { Component, signal } from '@angular/core';
 import { ItemForm } from "../../components/forms/itemForm/item-form/item-form";
 import { Item, Truck } from '../../lib/interfaces';
 import { TruckLayout } from "../../components/truck-layout/truck-layout";
+import { createEmptyTruck } from '../../lib/utils';
 
 @Component({
   selector: 'app-new-estimate',
@@ -12,15 +13,12 @@ import { TruckLayout } from "../../components/truck-layout/truck-layout";
 export class NewEstimate {
 
   itemList = signal<Item[]>([])
-
   truckList = signal<Truck[]>([
-    {
-      licensePlate: "123 ABC",
-      rowA1: {
-        orderNumber: null
-      }
-    }
+    createEmptyTruck("GDA 1234")
   ])
+
+  selectedTruck = signal<Truck | null>(null)
+  
 
   addItem(item: Item) {
     console.log("adding item")
@@ -31,13 +29,8 @@ export class NewEstimate {
 
   addTruck() {
     this.truckList().push(
-      {
-      licensePlate: "345 XYZ",
-      rowA1: {
-        orderNumber: null
-      }
-    }
-    )
+      createEmptyTruck()
+    );
   }
 
   onTruckChange(event: Event, index: number) {
@@ -49,6 +42,10 @@ export class NewEstimate {
       )
     )
     console.log(this.itemList())
+  }
+
+  selectTruck(truck: Truck) {
+    this.selectedTruck.set(truck)
   }
 
 

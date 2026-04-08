@@ -14,7 +14,9 @@
   <!-- Rows -->
   @for (row of rows; track row) {
 
-    <div class="grid grid-cols-13 gap-2 mb-2 items-center">
+    <div class="grid grid-cols-13 gap-2 mb-2 items-center"
+      (click)="selectTruck()"
+    >
 
       <!-- Row label -->
       <div class="font-semibold text-gray-700">

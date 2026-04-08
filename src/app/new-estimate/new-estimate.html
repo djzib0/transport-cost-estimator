@@ -72,7 +72,11 @@
   >
   Add truck
 </button>
+<p>Selected truck is: {{selectedTruck()?.licensePlate}}</p>
 
 @for (truck of truckList(); track $index) {
-  <app-truck-layout></app-truck-layout>
+  <app-truck-layout
+    [truck]="truck"
+    (sendSelectedTruck)="selectTruck($event)"
+  ></app-truck-layout>
 }

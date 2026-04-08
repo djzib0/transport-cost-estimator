@@ -15,9 +15,26 @@ export interface GridResult {
     gridLength: number;
 }
 
+
+// Truck
+// export interface Truck {
+//     licensePlate?: string;
+//     rowA1: {
+//         orderNumber: string[] | null; // can contain stacked order
+//     },
+//     rowA2: {
+//         orderNumber: string[] | null; // can contain stacked order
+//     },
+// }
+
+export type Position = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12; 
+export type RowKey = 'A' | 'B';
+
+export type RowCell = {
+    orderNumber: string[] | null;
+}
+
 export interface Truck {
     licensePlate?: string;
-    rowA1: {
-        orderNumber: string[] | null; // can contain stacked order
-    }
+    rows: Record<RowKey, Record<Position, RowCell>>;
 }
