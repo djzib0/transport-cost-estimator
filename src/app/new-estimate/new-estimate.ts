@@ -16,9 +16,9 @@ export class NewEstimate {
     licensePlate: "GWE 3456",
     rows: {
       A: {
-        1: { orderNumber: ["jk"] },
+        1: { orderNumber: ["32334", "32332"] },
         2: { orderNumber: null },
-        3: { orderNumber: null },
+        3: { orderNumber: ["32335"] },
         4: { orderNumber: null },
         5: { orderNumber: null },
         6: { orderNumber: null },
@@ -46,7 +46,22 @@ export class NewEstimate {
     }
   }
 
-  itemList = signal<Item[]>([])
+  exampleItem: Item = {
+    name: "rudder",
+    width: 1100,
+    length: 3400,
+    isStacked: false,
+    orderNumber: "45665",
+    clientOrderNumber: null,
+    gridWidth: 1, // keeps the number of pallete fields in truck grid row A
+    gridLength: 3, // keeps the number of pallete fields in truck grid row B
+    truckNumber: null
+  }
+
+  itemList = signal<Item[]>([
+    this.exampleItem
+  ])
+  
   truckList = signal<Truck[]>([
     this.exampleTruck,
     createEmptyTruck("GDA 1234")

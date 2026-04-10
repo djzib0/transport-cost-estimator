@@ -6,8 +6,9 @@
 <div class="max-w-4xl mx-auto space-y-2">
 
   <!-- Header -->
-  <div class="grid grid-cols-6 gap-4 px-4 py-2 text-sm font-semibold text-gray-500 border-b">
+  <div class="grid grid-cols-9 gap-4 px-4 py-2 text-sm font-semibold text-gray-500 border-b">
     <div>Name</div>
+    <div>Order no.</div>
     <div>Width</div>
     <div>Length</div>
     <div>Grid W</div>
@@ -17,11 +18,15 @@
 
   <!-- Rows -->
   @for (item of itemList(); track $index) {
-    <div class="grid grid-cols-6 gap-4 items-center px-4 py-3 bg-white rounded-lg shadow-sm hover:shadow-md transition">
+    <div class="grid grid-cols-9 gap-4 items-center px-4 py-3 bg-white rounded-lg shadow-sm hover:shadow-md transition">
 
       <!-- Name -->
       <div class="font-medium text-gray-800">
         {{ item.name }}
+      </div>
+
+      <div class="font-medium text-gray-800">
+        {{ item.orderNumber }}
       </div>
 
       <!-- Width -->
@@ -84,6 +89,7 @@
 @for (truck of truckList(); track $index) {
   <app-truck-layout
     [truck]="truck"
+    [selectedTruck]="selectedTruck()"
     (sendSelectedTruck)="selectTruck($event)"
   ></app-truck-layout>
 }

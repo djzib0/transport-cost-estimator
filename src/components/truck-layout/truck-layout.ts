@@ -1,25 +1,36 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Truck } from '../../lib/interfaces';
+import { Position, RowKey, Truck } from '../../lib/interfaces';
+import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-truck-layout',
-  imports: [],
+  imports: [NgClass],
   templateUrl: './truck-layout.html',
   styleUrl: './truck-layout.css',
 })
 export class TruckLayout {
 
-  rows = ['A', 'B'];
-  columns = Array.from({length: 12}, (_, i) => i + 1)
+  rows: RowKey[] = ['A', 'B'];
+  columns: Position[] = Array.from({length: 12}, (_, i) => (i + 1) as Position)
 
   @Input() truck: Truck | undefined | null = null
+  @Input() selectedTruck: Truck | null = null;
 
   @Output() sendSelectedTruck = new EventEmitter<Truck>();
 
   selectTruck() {
     if (this.truck) {
       this.sendSelectedTruck.emit(this.truck);
-      console.log(this.truck?.licensePlate, " license plate is like here")
     }
+
   }
+
+  showData(row: RowKey, col: Position ) {
+    console.log(this.truck?.rows[row][col].orderNumber, " square data here")
+  }
+
+  getOrderNumber(row: RowKey, col: Position): string[] | null | undefined {
+    return this.truck?.rows[row]?.[col]?.orderNumber;
+  }
+
 }
