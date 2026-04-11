@@ -36,7 +36,6 @@ export function areAdjacentFieldsEmpty(
     gridLength: number
 ): boolean {
 
-
     let emptyFieldsRowA = [];
     let emptyFieldsRowB = [];
 
@@ -49,7 +48,10 @@ export function areAdjacentFieldsEmpty(
     }
 
     // 2. If it's empty, check if adjacent fields are empty
-    // by adding length to currently checked field
+    // by adding length to currently checked field coordinates, 
+    // if the field is empty, push it to the array.
+    // at the end if arrays length is equal to gridLength, it means
+    // that there is enough space to fit the item.
 
     // if the item will cover two rows, we check both availability of fields
     // in two rows
@@ -61,36 +63,45 @@ export function areAdjacentFieldsEmpty(
             emptyFieldsRowB.push(`${"B"}${pos}`)
         }
         for (let i = 1; i < gridLength; i++) {
-            // check if it will fit at the end of the truck
             const newPos = pos + i as Position
             
             // check if adjacent field is available
             if (truck.rows["A"][newPos].orderNumber !== null) {
-                // console.log(`Field ${"A"}${newPos} cannot be used`)
             } else {
-                // console.log(`Adding to the rowsA: ${rowKey}${newPos}`)
                 emptyFieldsRowA.push(`${"A"}${newPos}`)
             } 
     
             // check if equivalent field but in row B is available
             if (truck.rows["B"][newPos].orderNumber !== null) {
-                console.log(`Field ${"B"}${newPos} cannot be used`)
             } else {
-                // console.log(`Adding to the rowsA: ${rowKey}${newPos}`)
                 emptyFieldsRowB.push(`${"B"}${newPos}`)
             }
         }
 
-        if (gridLength === emptyFieldsRowA.length && gridLength === emptyFieldsRowB.length) {
-            console.log()
-        }
     } else if (gridWidth === 1) {
-        // if the iem is only 1 row wide, I'm saving the fields for fomparison
-        // only to emptyFieldsRowA
+        console.log(`Investigatin field ${rowKey}${pos}`)
+        if (truck.rows[rowKey][pos].orderNumber === null) {
+            emptyFieldsRowB.push(`${rowKey}${pos}`)
+        }
+        for (let i = 1; i < gridLength; i++) {
+            const newPos = pos + i as Position
+            // check if adjacent field is available
+            if (truck.rows[rowKey][newPos].orderNumber !== null) {
+            } else {
+                emptyFieldsRowA.push(`${rowKey}${newPos}`)
+            }
 
+            // if (truck.rows["B"][newPos].orderNumber !== null) {
+            // } else {
+            //     emptyFieldsRowB.push(`${"B"}${newPos}`)
+            // }
+
+        }
+        if (gridLength === emptyFieldsRowA.length || gridLength === emptyFieldsRowB.length) {
+            return true
+        }
     }
-        // console.log("checking adjacent fields",`${rowKey}${newPos}`)
-        // console.log(truck.rows[rowKey][newPos])
+  
 
     if (gridLength === emptyFieldsRowA.length && gridLength === emptyFieldsRowB.length) {
         console.log(console.log(`Original Field ${rowKey}${pos} CAN BE USED as a starting point`))

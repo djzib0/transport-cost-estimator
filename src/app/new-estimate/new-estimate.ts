@@ -60,7 +60,18 @@ export class NewEstimate {
   }
 
   itemList = signal<Item[]>([
-    this.exampleItem
+    this.exampleItem,
+    {
+    name: "nozzle",
+    width: 400,
+    length: 1100,
+    isStacked: false,
+    orderNumber: "45665",
+    clientOrderNumber: null,
+    gridWidth: 1, // keeps the number of pallete fields in truck grid row A
+    gridLength: 1, // keeps the number of pallete fields in truck grid row B
+    truckNumber: null
+  }
   ])
   
   truckList = signal<Truck[]>([
@@ -107,32 +118,48 @@ export class NewEstimate {
       return truck.licensePlate === licensePlate
     })
 
-    console.log(truck, " truck")
-    let freeSpaces = []
+    // console.log(truck, " truck")
+    let freeSpaces: string[] = []
 
     const positions: Position[] = [1,2,3,4,5,6,7,8,9,10,11,12];
     // const rowKeys: RowKey[] = gridWidth === 2 ? ['A'] : ['A', 'B']
     const rowKeys: RowKey[] = ['A', 'B']
     
-
-    for (let rowKey of rowKeys) {
-      for (let pos of positions) {
-        // console.log(truck?.rows[rowKey][pos], `${rowKey}${pos} <-- position`)
-        // console.log(truck?.rows[rowKey][pos], `${rowKey}${pos} <-- position`)
-        if (truck && gridWidth && gridLength) {
-          areAdjacentFieldsEmpty(
-            truck, rowKey, pos, gridWidth, gridLength
-          )
-        }
-
-        if ((gridWidth && gridLength) && truck?.rows[rowKey][pos].orderNumber === null
-          && areAdjacentFieldsEmpty(
-            truck, rowKey, pos, gridWidth, gridLength
-          )
-        ) {
-          freeSpaces.push(`${rowKey}${pos}`)
-        }
+    if (gridWidth === 2) {
+      for (let rowKey of rowKeys) {
+        for (let pos of positions) {
+          // console.log(truck?.rows[rowKey][pos], `${rowKey}${pos} <-- position`)
+          // console.log(truck?.rows[rowKey][pos], `${rowKey}${pos} <-- position`)
+          if (
+            (gridWidth && gridLength) 
+            && truck?.rows[rowKey][pos].orderNumber === null
+            && areAdjacentFieldsEmpty(truck, rowKey, pos, gridWidth, gridLength)
+          ) {
+            freeSpaces.push(`${rowKey}${pos}`)
+          }
+        };
       };
+
+      // when gridWidth is 2, we take only row A coordinates
+      const filteredFreeSpaces: string[] = freeSpaces.filter(item => !item.includes("B"))
+
+      return filteredFreeSpaces || [];
+
+    } else if (gridWidth === 1) {
+        for (let rowKey of rowKeys) {
+          for (let pos of positions) {
+            // console.log(truck?.rows[rowKey][pos], `${rowKey}${pos} <-- position`)
+            // console.log(truck?.rows[rowKey][pos], `${rowKey}${pos} <-- position`)
+    
+            if (
+              (gridWidth && gridLength) 
+              && truck?.rows[rowKey][pos].orderNumber === null
+              && areAdjacentFieldsEmpty(truck, rowKey, pos, gridWidth, gridLength)
+            ) {
+              freeSpaces.push(`${rowKey}${pos}`)
+            }
+          };
+        };
     };
 
     return freeSpaces;
