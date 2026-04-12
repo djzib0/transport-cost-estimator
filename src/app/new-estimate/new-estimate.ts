@@ -1,12 +1,13 @@
 import { Component, signal } from '@angular/core';
 import { ItemForm } from "../../components/forms/itemForm/item-form/item-form";
-import { Item, Position, RowKey, Truck } from '../../lib/interfaces';
+import { Item, ModalType, Position, RowKey, Truck } from '../../lib/interfaces';
 import { TruckLayout } from "../../components/truck-layout/truck-layout";
 import { areAdjacentFieldsEmpty, createEmptyTruck } from '../../lib/utils';
+import { Modal } from "../../components/modal/modal";
 
 @Component({
   selector: 'app-new-estimate',
-  imports: [ItemForm, TruckLayout],
+  imports: [ItemForm, TruckLayout, Modal],
   templateUrl: './new-estimate.html',
   styleUrl: './new-estimate.css',
 })
@@ -80,6 +81,26 @@ export class NewEstimate {
   ])
 
   selectedTruck = signal<Truck | null>(null)
+
+  //MODAL controls
+  isModalOpen = signal<boolean>(false);
+  modalTitle = signal<string>("");
+  modalText = signal<string>("");
+  modalType = signal<ModalType>("default");
+
+  openModal(modalTitle: string, modalText: string, modalType: ModalType) {
+    this.modalTitle.set(modalTitle);
+    this.modalText.set(modalText);
+    this.modalType.set(modalType);
+    this.isModalOpen.set(true);
+  }
+
+  closeModal() {
+    this.modalTitle.set("");
+    this.modalText.set("");
+    this.modalType.set("default");
+    this.isModalOpen.set(false);
+  }
   
 
   addItem(item: Item) {
@@ -164,6 +185,4 @@ export class NewEstimate {
 
     return freeSpaces;
   }
-
-
 }

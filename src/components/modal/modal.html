@@ -1,0 +1,49 @@
+<!-- Modal -->
+<div
+  class="fixed inset-0 z-50 flex items-center justify-center"
+>
+  <!-- Backdrop -->
+  <div
+    class="absolute inset-0 bg-black/40 backdrop-blur-sm"
+    (click)="closeModal()"
+  ></div>
+
+  <!-- Modal box -->
+  <div
+    class="relative z-10 w-full max-w-md mx-4 bg-white rounded-2xl shadow-xl p-6
+           transform transition-all duration-300 scale-100 opacity-100"
+  >
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="text-xl font-semibold text-gray-800">
+        {{modalTitle}}
+      </h2>
+      <button
+        (click)="closeModal()"
+        class="text-gray-400 hover:text-gray-600 text-xl"
+      >
+        ✕
+      </button>
+    </div>
+
+    <!-- Content -->
+    <div class="text-gray-600 mb-6">
+        {{modalText}}
+    </div>
+
+    <!-- Actions -->
+    <div class="flex justify-end gap-3">
+      <button
+        (click)="closeModal()"
+        class="px-4 py-2 rounded-xl border border-gray-300 text-gray-600 hover:bg-gray-100 transition"
+      >
+        Cancel
+      </button>
+      <button
+        class="px-4 py-2 rounded-xl bg-blue-600 text-white hover:bg-blue-700 transition shadow"
+      >
+        Confirm
+      </button>
+    </div>
+  </div>
+</div>

@@ -38,3 +38,5 @@ export interface Truck {
     licensePlate?: string;
     rows: Record<RowKey, Record<Position, RowCell>>;
 }
+
+export type ModalType = 'default' | 'info' | 'success' | 'warning' | 'danger';
