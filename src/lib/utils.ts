@@ -41,7 +41,7 @@ export function areAdjacentFieldsEmpty(
 
     // 1. Check if passed field is empty
     if (truck.rows[rowKey][pos].orderNumber !== null || (pos + gridLength -1 > 12)) {
-        console.log(`Original Field ${rowKey}${pos} cannot be used`)
+        // console.log(`Original Field ${rowKey}${pos} cannot be used`)
         return false
     } else {
         emptyFieldsRowA.push(`${rowKey}${pos}`)
@@ -79,7 +79,7 @@ export function areAdjacentFieldsEmpty(
         }
 
     } else if (gridWidth === 1) {
-        console.log(`Investigatin field ${rowKey}${pos}`)
+        // console.log(`Investigatin field ${rowKey}${pos}`)
         if (truck.rows[rowKey][pos].orderNumber === null) {
             emptyFieldsRowB.push(`${rowKey}${pos}`)
         }
@@ -104,7 +104,7 @@ export function areAdjacentFieldsEmpty(
   
 
     if (gridLength === emptyFieldsRowA.length && gridLength === emptyFieldsRowB.length) {
-        console.log(console.log(`Original Field ${rowKey}${pos} CAN BE USED as a starting point`))
+        // console.log(console.log(`Original Field ${rowKey}${pos} CAN BE USED as a starting point`))
         return true
     }
     return false

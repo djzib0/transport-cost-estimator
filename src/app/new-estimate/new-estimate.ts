@@ -57,7 +57,8 @@ export class NewEstimate {
     clientOrderNumber: null,
     gridWidth: 2, // keeps the number of pallete fields in truck grid row A
     gridLength: 3, // keeps the number of pallete fields in truck grid row B
-    truckNumber: null
+    truckNumber: null,
+    startingField: ["A", 1]
   }
 
   itemList = signal<Item[]>([
@@ -71,16 +72,21 @@ export class NewEstimate {
     clientOrderNumber: null,
     gridWidth: 1, // keeps the number of pallete fields in truck grid row A
     gridLength: 1, // keeps the number of pallete fields in truck grid row B
-    truckNumber: null
-  }
+    truckNumber: null,
+    startingField: null,
+    }
   ])
   
   truckList = signal<Truck[]>([
     this.exampleTruck,
-    createEmptyTruck("GDA 1234")
+    // createEmptyTruck("GDA 1234")
   ])
 
+  // VARIABLES
+
   selectedTruck = signal<Truck | null>(null)
+
+  // END OF VARIABLES
 
   //MODAL controls
   isModalOpen = signal<boolean>(false);
@@ -123,11 +129,42 @@ export class NewEstimate {
       i === index ? {...item, truckNumber: value } : item
       )
     )
-    
+  }
+
+  onSpaceChange(event: Event, index: number) {
+    const value = (event.target as HTMLSelectElement).value;
+    console.log(value)
+    this.itemList.update(list => 
+      list.map((item, i) =>
+      i === index ? {...item, startingField: [value[0], Number(value[1])] } : item
+      )
+    )
+    console.log(this.itemList())
   }
 
   selectTruck(truck: Truck) {
     this.selectedTruck.set(truck)
+  }
+
+  saveItemOnTruck(item: Item) {
+    console.log(`saving item ${item.name} from order ${item.orderNumber}`)
+    console.log(`staring point is ${item.startingField?.[0]}, ${item.startingField?.[1]}`)
+    const updatedTruckList = this.truckList().map(truck =>
+      truck.licensePlate === item.truckNumber
+        ? {
+            ...truck,
+            rows: {
+              ...truck.rows,
+              "A": {
+                ...truck.rows.A,
+                1: { orderNumber: [item.orderNumber] }
+              }
+            }
+          }
+        : truck
+    );
+    this.truckList.set(updatedTruckList)
+    console.log(this.truckList(), " updated trucks")
   }
 
   showFreeTruckSpace(
