@@ -148,22 +148,45 @@ export class NewEstimate {
 
   saveItemOnTruck(item: Item) {
     console.log(`saving item ${item.name} from order ${item.orderNumber}`)
-    console.log(`staring point is ${item.startingField?.[0]}, ${item.startingField?.[1]}`)
+    console.log(`staring point is ${item.startingField?.[0]}, ${item.startingField?.[1]} ${Number(item.startingField?.slice(1))}`)
     const updatedTruckList = this.truckList().map(truck =>
-      truck.licensePlate === item.truckNumber
-        ? {
-            ...truck,
-            rows: {
-              ...truck.rows,
-              "A": {
-                ...truck.rows.A,
-                1: { orderNumber: [item.orderNumber] }
+    truck.licensePlate === item.truckNumber
+      ? {
+          ...truck,
+          rows: {
+            ...truck.rows,
+            [item.startingField?.[0] as keyof typeof truck.rows]: {
+              ...truck.rows[item.startingField?.[0] as keyof typeof truck.rows],
+              [Number(item.startingField?.slice(1)) as keyof typeof truck.rows.A]: {
+                ...truck.rows[
+                  item.startingField?.[0] as keyof typeof truck.rows
+                ][
+                  Number(item.startingField?.slice(1)) as keyof typeof truck.rows.A
+                ],
+                orderNumber: item.orderNumber
+                  ? [
+                      ...(
+                        truck.rows[
+                          item.startingField?.[0] as keyof typeof truck.rows
+                        ][
+                          Number(item.startingField?.slice(1)) as keyof typeof truck.rows.A
+                        ].orderNumber ?? []
+                      ),
+                      item.orderNumber
+                    ]
+                  : truck.rows[
+                      item.startingField?.[0] as keyof typeof truck.rows
+                    ][
+                      Number(item.startingField?.slice(1)) as keyof typeof truck.rows.A
+                    ].orderNumber ?? []
               }
             }
           }
-        : truck
-    );
-    this.truckList.set(updatedTruckList)
+        }
+      : truck
+  );
+
+  this.truckList.set(updatedTruckList);
     console.log(this.truckList(), " updated trucks")
   }
 
