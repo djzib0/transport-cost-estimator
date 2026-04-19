@@ -18,15 +18,16 @@ import { calculateSpace } from '../../../../lib/utils';
 export class ItemForm {
 
   itemModel = signal<Item>({
+    id: "lkjlajoiuiuyia",
     name: 'kj',
     width: 0,
     length: 0,
     isStacked: null,
     orderNumber: null,
     clientOrderNumber: null,
-    gridWidth: null,
-    gridLength: null,
-    truckNumber: null,
+    gridWidth: 0,
+    gridLength: 0,
+    truckNumber: "",
   })
 
   palletPlacePricePln = signal(palletPlacePricePln)
@@ -41,6 +42,7 @@ export class ItemForm {
     gridWidth: new FormControl(null),
     gridLength: new FormControl(null),
     truckNumber: new FormControl(null),
+    startingField: new FormControl(null)
   })
 
   @Output() itemCreated = new EventEmitter<Item>();
