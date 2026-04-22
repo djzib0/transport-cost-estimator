@@ -60,7 +60,7 @@ export class NewEstimate {
     gridWidth: 2, // keeps the number of pallete fields in truck grid row A
     gridLength: 3, // keeps the number of pallete fields in truck grid row B
     truckNumber: "",
-    startingField: null,
+    startingField: "----",
   }
 
   itemList = signal<Item[]>([
@@ -76,7 +76,7 @@ export class NewEstimate {
     gridWidth: 1, // keeps the number of pallete fields in truck grid row A
     gridLength: 1, // keeps the number of pallete fields in truck grid row B
     truckNumber: "",
-    startingField: null,
+    startingField: "----",
     }
   ])
   
@@ -125,14 +125,23 @@ export class NewEstimate {
   }
 
   onTruckChange(event: Event, index: number) {
-    const value = (event.target as HTMLSelectElement).value;
+  const raw = (event.target as HTMLSelectElement).value;
+  const truckNumber = raw === "null" ? null : raw;
 
-    this.itemList.update(list => 
-      list.map((item, i) =>
-      i === index ? {...item, truckNumber: value } : item
-      )
-    )
-  }
+  this.itemList.update((list: Item[]) =>
+  list.map((item, i): Item => {
+    if (i === index) {
+      return {
+        ...item,
+        truckNumber,
+        startingField: null
+      };
+    }
+
+    return item;
+  })
+);
+}
 
   onSpaceChange(event: Event, index: number) {
     const value = (event.target as HTMLSelectElement).value;
@@ -166,6 +175,15 @@ export class NewEstimate {
       }
     }
   }
+
+  // reset all 
+  this.itemList.update(items =>
+    items.map(item => ({
+      ...item,
+      startingField: "----",
+      truckNumber: null
+    }))
+  );
 
   // reset remaining items in itemList
   // this.itemList().forEach(element => {

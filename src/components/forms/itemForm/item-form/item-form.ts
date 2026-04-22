@@ -33,11 +33,11 @@ export class ItemForm {
   palletPlacePricePln = signal(palletPlacePricePln)
 
   itemForm: FormGroup = new FormGroup({
-    name: new FormControl('jk', Validators.required),
+    name: new FormControl('rudder', Validators.required),
+    orderNumber: new FormControl("43216", Validators.required),
     width: new FormControl(0, [Validators.required, Validators.min(1), Validators.max(2400)]),
     length: new FormControl(0, [Validators.required, Validators.min(1), Validators.max(12000)]),
     isStacked: new FormControl(null),
-    orderNumber: new FormControl(null),
     clientOrderNumber: new FormControl(null),
     gridWidth: new FormControl(null),
     gridLength: new FormControl(null),

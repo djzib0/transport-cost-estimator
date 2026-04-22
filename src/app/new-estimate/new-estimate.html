@@ -45,18 +45,24 @@
       {{ item.gridLength }}
     </div>
 
-    <select name="trucks" id="trucks" (change)="onTruckChange($event, $index)">
-      <option [value]="null">----</option>
-      @for (truck of truckList(); track $index) {
-      <option [value]="truck.licensePlate">Truck {{$index + 1}}</option>
-      }
-    </select>
-    <select name="spaces" id="spaces" (change)="onSpaceChange($event, $index)">
-      <option [value]="null">----</option>
-      @for (space of showFreeTruckSpace(item.truckNumber, item.gridWidth, item.gridLength); track $index) {
-      <option [value]="space">{{space}}</option>
-      }
-    </select>
+      <select name="trucks" id="trucks" 
+        (change)="onTruckChange($event, $index)"
+        [value]="item.truckNumber"
+      >
+        <option [value]="null">----</option>
+        @for (truck of truckList(); track $index) {
+          <option [value]="truck.licensePlate">Truck {{$index + 1}}</option>
+        }
+      </select>
+      <select name="spaces" id="spaces" 
+        (change)="onSpaceChange($event, $index)"
+        [value]="item.startingField"
+      >
+        <option [value]="null">----</option>
+        @for (space of showFreeTruckSpace(item.truckNumber, item.gridWidth, item.gridLength); track $index) {
+          <option [value]="space">{{space}}</option>
+        }
+      </select>
 
     <!-- Actions -->
     <div class="flex justify-end gap-2">

@@ -8,8 +8,8 @@ export interface Item {
     clientOrderNumber?: string | null;
     gridWidth: number | 0; // keeps the number of pallete fields in truck grid row A
     gridLength: number | 0; // keeps the number of pallete fields in truck grid row B
-    truckNumber?: string | "";
-    startingField?: string | null;
+    truckNumber?: string | "" | null;
+    startingField?: string | null | "----";
 }
 
 export interface GridResult {

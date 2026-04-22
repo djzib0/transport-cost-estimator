@@ -10,7 +10,7 @@
     
     <!-- Name -->
     <div class="flex flex-col">
-      <label class="text-sm font-medium text-gray-600">Name</label>
+      <label class="text-xs font-medium text-gray-600">Name</label>
       <input 
         type="text" 
         formControlName="name" 
@@ -18,23 +18,57 @@
         class="border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-400"
         [class.border-red-500]="itemForm.get('name')?.invalid && itemForm.get('name')?.touched"
       />
+      <div class="min-h-4">
+        @if (itemForm.get('name')?.invalid && itemForm.get('name')?.touched) {
+          <p class="text-red-500 text-xs mt-0">
+            Length is required
+          </p>
+        }
+      </div>
     </div>
 
-    <!-- Width -->
+    <!-- Order number -->
     <div class="flex flex-col">
-      <label class="text-sm font-medium text-gray-600">Width</label>
+      <label class="text-xs font-medium text-gray-600">Order number</label>
       <input 
+        type="text" 
+        formControlName="orderNumber" 
+        placeholder="Order number"
+        class="border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-400"
+        [class.border-red-500]="itemForm.get('orderNumber')?.invalid && itemForm.get('orderNumber')?.touched"
+      />
+      <div class="min-h-4">
+        @if (itemForm.get('orderNumber')?.invalid && itemForm.get('orderNumber')?.touched) {
+          <p class="text-red-500 text-xs mt-0">
+            Length is required
+          </p>
+        }
+      </div>
+    </div>
+      
+      <!-- Width -->
+      <div class="flex flex-col">
+        <label class="text-xs font-medium text-gray-600">Width</label>
+        <input 
         type="number" 
         max="2400"
         formControlName="width"
         placeholder="0"
-        class="border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-400"
+        class="border border-gray-300 rounded-md px-3 py-2 text-xs focus:ring-2 focus:ring-blue-400"
+        [class.border-red-500]="itemForm.get('width')?.invalid && itemForm.get('width')?.touched"
       />
+      <div class="min-h-4">
+        @if (itemForm.get('width')?.invalid && itemForm.get('width')?.touched) {
+          <p class="text-red-500 text-xs mt-0">
+            Length is required
+          </p>
+        }
+      </div>
     </div>
 
     <!-- Length -->
     <div class="flex flex-col">
-      <label class="text-sm font-medium text-gray-600">Length [mm]</label>
+      <label class="text-xs font-medium text-gray-600">Length [mm]</label>
       <input 
         type="number" 
         formControlName="length" 
@@ -42,16 +76,16 @@
         class="border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-400"
         [class.border-red-500]="itemForm.get('length')?.invalid && itemForm.get('length')?.touched"
       />
+      <div class="min-h-4">
+        @if (itemForm.get('length')?.invalid && itemForm.get('length')?.touched) {
+          <p class="text-red-500 text-xs mt-0">
+            Length is required
+          </p>
+        }
+      </div>
     </div>
 
   </div>
-
-  <!-- Error -->
-  @if (itemForm.get('length')?.invalid && itemForm.get('length')?.touched) {
-    <p class="text-red-500 text-xs -mt-2">
-      Length is required
-    </p>
-  }
 
   <!-- Button aligned right -->
   <div class="flex justify-end">
