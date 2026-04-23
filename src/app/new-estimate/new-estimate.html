@@ -15,7 +15,10 @@
 
   <!-- Rows -->
   @for (item of itemList(); track $index) {
-  <div class="grid grid-cols-9 gap-4 items-center px-4 py-3 bg-white rounded-lg shadow-sm hover:shadow-md transition">
+  <div class="grid grid-cols-9 gap-4 items-center px-4 py-3 rounded-lg shadow-sm hover:shadow-md transition"
+    (click)="selectItem(item)"
+    [ngClass]="item === selectedItem() ? 'bg-amber-300' : 'bg-white'"
+  >
 
     <!-- Name -->
     <div class="font-medium text-gray-800">
@@ -88,7 +91,10 @@
 <p> Selected truck is: {{selectedTruck()?.licensePlate}}</p>
 
 @for (truck of truckList(); track $index) {
-<app-truck-layout [truck]="truck" [selectedTruck]="selectedTruck()"
+<app-truck-layout 
+  [truck]="truck" 
+  [selectedTruck]="selectedTruck()"
+  [selectedItem]="selectedItem()"
   (sendSelectedTruck)="selectTruck($event)"></app-truck-layout>
 }
 

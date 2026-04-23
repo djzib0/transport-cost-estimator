@@ -5,10 +5,11 @@ import { TruckLayout } from "../../components/truck-layout/truck-layout";
 import { areAdjacentFieldsEmpty, createEmptyTruck } from '../../lib/utils';
 import { Modal } from "../../components/modal/modal";
 import { ɵInternalFormsSharedModule } from "@angular/forms";
+import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-new-estimate',
-  imports: [ItemForm, TruckLayout, Modal, ɵInternalFormsSharedModule],
+  imports: [ItemForm, TruckLayout, Modal, ɵInternalFormsSharedModule, NgClass],
   templateUrl: './new-estimate.html',
   styleUrl: './new-estimate.css',
 })
@@ -71,7 +72,7 @@ export class NewEstimate {
     width: 400,
     length: 1100,
     isStacked: false,
-    orderNumber: "45665",
+    orderNumber: "32146",
     clientOrderNumber: null,
     gridWidth: 1, // keeps the number of pallete fields in truck grid row A
     gridLength: 1, // keeps the number of pallete fields in truck grid row B
@@ -87,7 +88,8 @@ export class NewEstimate {
 
   // VARIABLES
 
-  selectedTruck = signal<Truck | null>(null)
+  selectedTruck = signal<Truck | null>(null);
+  selectedItem = signal<Item | null>(null);
 
   // END OF VARIABLES
 
@@ -307,5 +309,16 @@ export class NewEstimate {
     };    
 
     return freeSpaces;
+  }
+
+  selectItem(item: Item) {
+    console.log(`passing ${item.orderNumber}`)
+    if (item.id === this.selectedItem()?.id) {
+      this.selectedItem.set(null);
+    } else {
+      this.selectedItem.set(item)
+    }
+
+    console.log(`selected item order number is: ${this.selectedItem()?.orderNumber}`)
   }
 }

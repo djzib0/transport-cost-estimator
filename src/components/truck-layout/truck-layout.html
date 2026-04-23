@@ -1,47 +1,42 @@
-<div 
-  class="p-4"
-  [ngClass]="{
+<div class="p-4" [ngClass]="{
     'bg-green-200 text-green-900': selectedTruck === truck
-  }"
->
+  }">
 
   <!-- Column headers -->
   <div class="grid grid-cols-13 gap-2 mb-2">
     <div></div> <!-- empty corner -->
 
     @for (col of columns; track col) {
-      <div class="text-center text-sm font-semibold text-gray-600">
-        {{ col }}
-      </div>
+    <div class="text-center text-sm font-semibold text-gray-600">
+      {{ col }}
+    </div>
     }
   </div>
 
   <!-- Rows -->
   @for (row of rows; track row) {
-    <div class="grid grid-cols-13 gap-2 mb-2 items-center"
-      (click)="selectTruck()"
-    >
+  <div class="grid grid-cols-13 gap-2 mb-2 items-center" (click)="selectTruck()">
 
-      <!-- Row label -->
-      <div class="font-semibold text-gray-700">
-        {{ row }}
-      </div>
+    <!-- Row label -->
+    <div class="font-semibold text-gray-700">
+      {{ row }}
+    </div>
 
-      <!-- Squares -->
-      @for (col of columns; track col) {
-  <div class="w-12 h-12 bg-blue-100 rounded-md flex flex-col items-center justify-center text-sm font-medium text-blue-700">
-    @for (order of getOrderNumber(row, col); track $index) {
-      <p>
+    <!-- Squares -->
+    @for (col of columns; track col) {
+    <div
+      class="w-12 h-12 bg-blue-100 rounded-md flex flex-col items-center justify-center text-sm font-medium text-blue-700">
+      @for (order of getOrderNumber(row, col); track $index) {
+      <p
+      >
         {{order}}
       </p>
-    }
-  </div>
-}
-
+      }
     </div>
+    }
+
+  </div>
 
   }
 
 </div>
-
-

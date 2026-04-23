@@ -4,7 +4,7 @@ export interface Item {
     width: number;
     length: number;
     isStacked?: boolean | null;
-    orderNumber?: string | null;
+    orderNumber: string | null;
     clientOrderNumber?: string | null;
     gridWidth: number | 0; // keeps the number of pallete fields in truck grid row A
     gridLength: number | 0; // keeps the number of pallete fields in truck grid row B
