@@ -7,7 +7,7 @@ import { CurrencyPipe } from '@angular/common';
 import { registerLocaleData } from '@angular/common';
 registerLocaleData(localePl);
 import localePl from '@angular/common/locales/pl';
-import { calculateSpace } from '../../../../lib/utils';
+import { calculateSpace, generateId } from '../../../../lib/utils';
 
 @Component({
   selector: 'app-item-form',
@@ -18,7 +18,7 @@ import { calculateSpace } from '../../../../lib/utils';
 export class ItemForm {
 
   itemModel = signal<Item>({
-    id: "lkjlajoiuiuyia",
+    id: generateId(),
     name: 'kj',
     width: 0,
     length: 0,
@@ -33,6 +33,7 @@ export class ItemForm {
   palletPlacePricePln = signal(palletPlacePricePln)
 
   itemForm: FormGroup = new FormGroup({
+    id: new FormControl(generateId()),
     name: new FormControl('rudder', Validators.required),
     orderNumber: new FormControl("43216", Validators.required),
     width: new FormControl(0, [Validators.required, Validators.min(1), Validators.max(2400)]),

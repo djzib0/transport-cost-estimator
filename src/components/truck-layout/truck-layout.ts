@@ -14,6 +14,7 @@ export class TruckLayout {
   columns: Position[] = Array.from({length: 12}, (_, i) => (i + 1) as Position)
 
   @Input() truck: Truck | undefined | null = null
+  @Input() itemList: Item[] | null = null;
   @Input() selectedTruck: Truck | null = null;
   @Input() selectedItem: Item | null = null;
 
@@ -23,19 +24,24 @@ export class TruckLayout {
     if (this.truck) {
       this.sendSelectedTruck.emit(this.truck);
     }
-
   }
 
   showData(row: RowKey, col: Position ) {
-    console.log(this.truck?.rows[row][col].orderNumber, " square data here")
+    console.log(this.truck?.rows[row][col].ordersIds, " square data here")
   }
 
-
-  // TODO 
-  // truck should keep the Item in array, not orderNumbers, it will allow
-  // conditionally change color of selected Item
   getOrderNumber(row: RowKey, col: Position): string[] | null | undefined {
-    return this.truck?.rows[row]?.[col]?.orderNumber;
+    let orderNumbers: string[] | null = [""]
+    this.truck?.rows[row]?.[col]?.ordersIds.forEach(id => {
+      this.itemList?.map(item => {
+        if (item.orderNumber && item.id === id) {
+          orderNumbers.push(item.orderNumber);
+        }
+      })
+    })
+
+    return orderNumbers;
   }
+
 
 }

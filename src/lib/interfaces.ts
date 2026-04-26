@@ -33,7 +33,7 @@ export type Position = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
 export type RowKey = 'A' | 'B';
 
 export type RowCell = {
-    orderNumber: string[];
+    ordersIds: string[];
 }
 
 export type Row = Record<Position, RowCell>;

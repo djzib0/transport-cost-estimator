@@ -7,6 +7,14 @@ import { Modal } from "../../components/modal/modal";
 import { ɵInternalFormsSharedModule } from "@angular/forms";
 import { NgClass } from '@angular/common';
 
+// TODO 
+// repair select function, when item is selected the corresponding
+// truck field should be highlighted.
+
+// TODO
+// block saved item (hide selected fields inputs)
+// add delete function and logic
+
 @Component({
   selector: 'app-new-estimate',
   imports: [ItemForm, TruckLayout, Modal, ɵInternalFormsSharedModule, NgClass],
@@ -20,38 +28,38 @@ export class NewEstimate {
     rows: {
       A: {
         // 1: { orderNumber: ["32334", "32332"] },
-        1: { orderNumber: [] },
-        2: { orderNumber: []},
-        3: { orderNumber: ["32335"] },
-        4: { orderNumber: []},
-        5: { orderNumber: []},
-        6: { orderNumber: []},
-        7: { orderNumber: []},
-        8: { orderNumber: []},
-        9: { orderNumber: []},
-        10: { orderNumber: []},
-        11: { orderNumber: []},
-        12: { orderNumber: []}
+        1: { ordersIds: [] },
+        2: { ordersIds: []},
+        3: { ordersIds: [] },
+        4: { ordersIds: []},
+        5: { ordersIds: []},
+        6: { ordersIds: []},
+        7: { ordersIds: []},
+        8: { ordersIds: []},
+        9: { ordersIds: []},
+        10: { ordersIds: []},
+        11: { ordersIds: []},
+        12: { ordersIds: []}
       },
       B: {
-        1: { orderNumber: []},
-        2: { orderNumber: []},
-        3: { orderNumber: []},
-        4: { orderNumber: []},
-        5: { orderNumber: ["32338"] },
-        6: { orderNumber: []},
-        7: { orderNumber: []},
-        8: { orderNumber: []},
-        9: { orderNumber: []},
-        10: { orderNumber: ["32338"] },
-        11: { orderNumber: []},
-        12: { orderNumber: []}
+        1: { ordersIds: []},
+        2: { ordersIds: []},
+        3: { ordersIds: []},
+        4: { ordersIds: []},
+        5: { ordersIds: [] },
+        6: { ordersIds: []},
+        7: { ordersIds: []},
+        8: { ordersIds: []},
+        9: { ordersIds: []},
+        10: { ordersIds: [] },
+        11: { ordersIds: []},
+        12: { ordersIds: []}
       }
     }
   }
 
   exampleItem: Item = {
-    id: "kjlajljadlja",
+    id: "idOfItem1",
     name: "rudder",
     width: 1300,
     length: 3400,
@@ -147,13 +155,13 @@ export class NewEstimate {
 
   onSpaceChange(event: Event, index: number) {
     const value = (event.target as HTMLSelectElement).value;
-    console.log(value)
+    
     this.itemList.update(list => 
       list.map((item, i) =>
       i === index ? {...item, startingField: value } : item
       )
     )
-    console.log(this.itemList())
+    
   }
 
   selectTruck(truck: Truck) {
@@ -167,9 +175,10 @@ export class NewEstimate {
 
   if (item.startingField) {
     for (let i = 0; i < item.gridLength; i++) {
-      const pos = Number(item.startingField[1]) + i;
+      const pos = Number(item.startingField.slice(1)) + i;
 
       if (item.gridWidth === 1) {
+        console.log(`${item.startingField[0]}${pos}`)
         fieldsToSave.push(`${item.startingField[0]}${pos}`);
       } else {
         fieldsToSave.push(`${item.startingField[0]}${pos}`);
@@ -219,12 +228,9 @@ export class NewEstimate {
     })
   );
 
-  console.log(this.itemList(), "item list after saving")
-
   const updatedTruckList = this.truckList().map(truck => {
     if (truck.licensePlate !== item.truckNumber) return truck;
 
-    // clone rows deeply (only what we need)
     const updatedRows = { ...truck.rows };
 
     fieldsToSave.forEach(field => {
@@ -235,12 +241,12 @@ export class NewEstimate {
         ...updatedRows[rowKey],
         [position]: {
           ...updatedRows[rowKey][position],
-          orderNumber: item.orderNumber
+          ordersIds: item.id
             ? [
-                ...(updatedRows[rowKey][position].orderNumber ?? []),
-                item.orderNumber
+                ...(updatedRows[rowKey][position].ordersIds ?? []),
+                item.id
               ]
-            : updatedRows[rowKey][position].orderNumber ?? []
+            : updatedRows[rowKey][position].ordersIds ?? []
         }
       };
     });
@@ -252,8 +258,6 @@ export class NewEstimate {
   });
 
   this.truckList.set(updatedTruckList);
-
-  console.log(this.truckList(), "updated trucks");
 }
   showFreeTruckSpace(
     licensePlate: string | null | undefined,
@@ -264,7 +268,6 @@ export class NewEstimate {
       return truck.licensePlate === licensePlate
     })
 
-    console.log(licensePlate, " truck")
     let freeSpaces: string[] = []
 
     const positions: Position[] = [1,2,3,4,5,6,7,8,9,10,11,12];
@@ -278,7 +281,7 @@ export class NewEstimate {
           // console.log(truck?.rows[rowKey][pos], `${rowKey}${pos} <-- position`)
           if (
             (gridWidth && gridLength) 
-            && truck?.rows[rowKey][pos].orderNumber.length === 0
+            && truck?.rows[rowKey][pos].ordersIds.length === 0
             && areAdjacentFieldsEmpty(truck, rowKey, pos, gridWidth, gridLength)
           ) {
             freeSpaces.push(`${rowKey}${pos}`)
@@ -299,7 +302,7 @@ export class NewEstimate {
     
             if (
               (gridWidth && gridLength) 
-              && truck?.rows[rowKey][pos].orderNumber.length === 0
+              && truck?.rows[rowKey][pos].ordersIds.length === 0
               && areAdjacentFieldsEmpty(truck, rowKey, pos, gridWidth, gridLength)
             ) {
               freeSpaces.push(`${rowKey}${pos}`)
@@ -312,13 +315,13 @@ export class NewEstimate {
   }
 
   selectItem(item: Item) {
-    console.log(`passing ${item.orderNumber}`)
+    // console.log(`passing ${item.orderNumber}`)
     if (item.id === this.selectedItem()?.id) {
       this.selectedItem.set(null);
     } else {
       this.selectedItem.set(item)
     }
 
-    console.log(`selected item order number is: ${this.selectedItem()?.orderNumber}`)
+    // console.log(`selected item order number is: ${this.selectedItem()?.orderNumber}`)
   }
 }

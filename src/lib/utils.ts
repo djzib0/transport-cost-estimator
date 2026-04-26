@@ -17,7 +17,7 @@ export function createEmptyTruck(licensePlate: string): Truck {
 
         positions.forEach(pos => {
             rows[rowKey][pos] = {
-                orderNumber: []
+                ordersIds: []
             };
         });
     });
@@ -40,7 +40,7 @@ export function areAdjacentFieldsEmpty(
     let emptyFieldsRowB = [];
 
     // 1. Check if passed field is empty
-    if (truck.rows[rowKey][pos].orderNumber.length !== 0 || (pos + gridLength - 1 > 12)) {
+    if (truck.rows[rowKey][pos].ordersIds.length !== 0 || (pos + gridLength - 1 > 12)) {
         return false
     } else {
         emptyFieldsRowA.push(`${rowKey}${pos}`)
@@ -57,7 +57,7 @@ export function areAdjacentFieldsEmpty(
     if (gridWidth === 2) {
         // if gridWidth is uqual to 2, we have to check if field under the 
         // starting field is available, if yes, we can add it to the array
-        if (truck.rows["B"][pos].orderNumber.length === 0) {
+        if (truck.rows["B"][pos].ordersIds.length === 0) {
             // console.log(`Original Field ${rowKey}${pos} cannot be used`)
             emptyFieldsRowB.push(`${"B"}${pos}`)
         }
@@ -65,13 +65,13 @@ export function areAdjacentFieldsEmpty(
             const newPos = pos + i as Position
             
             // check if adjacent field is available
-            if (truck.rows["A"][newPos].orderNumber.length !== 0) {
+            if (truck.rows["A"][newPos].ordersIds.length !== 0) {
             } else {
                 emptyFieldsRowA.push(`${"A"}${newPos}`)
             } 
     
             // check if equivalent field but in row B is available
-            if (truck.rows["B"][newPos].orderNumber.length !== 0) {
+            if (truck.rows["B"][newPos].ordersIds.length !== 0) {
             } else {
                 emptyFieldsRowB.push(`${"B"}${newPos}`)
             }
@@ -79,13 +79,13 @@ export function areAdjacentFieldsEmpty(
 
     } else if (gridWidth === 1) {
         // console.log(`Investigatin field ${rowKey}${pos}`)
-        if (truck.rows[rowKey][pos].orderNumber.length === 0) {
+        if (truck.rows[rowKey][pos].ordersIds.length === 0) {
             emptyFieldsRowB.push(`${rowKey}${pos}`)
         }
         for (let i = 1; i < gridLength; i++) {
             const newPos = pos + i as Position
             // check if adjacent field is available
-            if (truck.rows[rowKey][newPos].orderNumber.length !== 0) {
+            if (truck.rows[rowKey][newPos].ordersIds.length !== 0) {
             } else {
                 emptyFieldsRowA.push(`${rowKey}${newPos}`)
             }
@@ -108,3 +108,10 @@ export function areAdjacentFieldsEmpty(
     }
     return false
 }
+
+export const generateId = (length = 16) => {
+  const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+  const bytes = crypto.getRandomValues(new Uint8Array(length));
+
+  return Array.from(bytes, b => chars[b % chars.length]).join('');
+};
