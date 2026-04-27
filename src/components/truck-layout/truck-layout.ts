@@ -26,6 +26,13 @@ export class TruckLayout {
     }
   }
 
+  checkIsSelected(row: RowKey, col: Position) {
+    if (this.selectedItem?.id && this.truck?.rows[row]?.[col]?.ordersIds.includes(this.selectedItem?.id)) {
+      return true
+    }
+    return false
+  }
+
   showData(row: RowKey, col: Position ) {
     console.log(this.truck?.rows[row][col].ordersIds, " square data here")
   }

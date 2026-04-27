@@ -25,7 +25,9 @@
     <!-- Squares -->
     @for (col of columns; track col) {
     <div
-      class="w-12 h-12 bg-blue-100 rounded-md flex flex-col items-center justify-center text-sm font-medium text-blue-700">
+      class="w-12 h-12  rounded-md flex flex-col items-center justify-center text-sm font-medium text-blue-700"
+      [ngClass]=" checkIsSelected(row, col) ? 'bg-amber-300' : 'bg-blue-100'"
+      >
       @for (order of getOrderNumber(row, col); track $index) {
       <p
       >

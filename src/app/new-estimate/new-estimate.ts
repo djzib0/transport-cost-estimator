@@ -7,13 +7,9 @@ import { Modal } from "../../components/modal/modal";
 import { ɵInternalFormsSharedModule } from "@angular/forms";
 import { NgClass } from '@angular/common';
 
-// TODO 
-// repair select function, when item is selected the corresponding
-// truck field should be highlighted.
-
 // TODO
-// block saved item (hide selected fields inputs)
-// add delete function and logic
+// add remove from truck logic
+
 
 @Component({
   selector: 'app-new-estimate',
@@ -64,6 +60,7 @@ export class NewEstimate {
     width: 1300,
     length: 3400,
     isStacked: false,
+    isOnTruck: false,
     orderNumber: "45665",
     clientOrderNumber: null,
     gridWidth: 2, // keeps the number of pallete fields in truck grid row A
@@ -80,6 +77,7 @@ export class NewEstimate {
     width: 400,
     length: 1100,
     isStacked: false,
+    isOnTruck: false,
     orderNumber: "32146",
     clientOrderNumber: null,
     gridWidth: 1, // keeps the number of pallete fields in truck grid row A
@@ -171,14 +169,22 @@ export class NewEstimate {
   saveItemOnTruck(item: Item) {
   console.log(`saving item ${item.name} from order ${item.orderNumber}`);
 
-  let fieldsToSave: string[] = [];
+  const fieldsToSave: string[] = [];
 
-  if (item.startingField) {
+  console.log(item.startingField === "----")
+
+  const hasValidField =
+    item.startingField && item.startingField !== "----";
+
+  if (!hasValidField) {
+    return; 
+  }
+
+  if (hasValidField && item.startingField != null) {
     for (let i = 0; i < item.gridLength; i++) {
       const pos = Number(item.startingField.slice(1)) + i;
 
       if (item.gridWidth === 1) {
-        console.log(`${item.startingField[0]}${pos}`)
         fieldsToSave.push(`${item.startingField[0]}${pos}`);
       } else {
         fieldsToSave.push(`${item.startingField[0]}${pos}`);
@@ -187,47 +193,28 @@ export class NewEstimate {
     }
   }
 
-  // reset all 
+  // ✅ Update item list (single, predictable update)
   this.itemList.update(items =>
-    items.map(item => ({
-      ...item,
-      startingField: "----",
-      truckNumber: null
-    }))
-  );
-
-  // reset remaining items in itemList
-  // this.itemList().forEach(element => {
-  //   if (element.id === item.id ) {
-  //     console.log("This is the same item")
-  //   } else {
-  //     console.log("this is not the same item")
-  //     element.startingField = null;
-  //   }
-
-  //   console.log(this.itemList()[1].startingField, " starting field")
-
-  //   console.log(element.startingField, "element starting field")
-  // })
-
-  this.itemList.update(items =>
-    items.map(item => {
-      if (!item.startingField) return item;
-
-      const available = this.showFreeTruckSpace(
-        item.truckNumber,
-        item.gridWidth,
-        item.gridLength
-      );
-
-      if (!available.includes(item.startingField)) {
-        return { ...item, startingField: null };
+    items.map(el => {
+      if (el.id === item.id) {
+        return {
+          ...el,
+          isOnTruck: true,
+          startingField: item.startingField,
+          truckNumber: item.truckNumber
+        };
       }
 
-      return item;
+      // reset other items
+      return {
+        ...el,
+        startingField: "----",
+        truckNumber: null
+      };
     })
   );
 
+  // ✅ Update truck
   const updatedTruckList = this.truckList().map(truck => {
     if (truck.licensePlate !== item.truckNumber) return truck;
 
@@ -259,6 +246,113 @@ export class NewEstimate {
 
   this.truckList.set(updatedTruckList);
 }
+
+  // saveItemOnTruck(item: Item) {
+  //   console.log(`saving item ${item.name} from order ${item.orderNumber}`);
+
+  //   let fieldsToSave: string[] = [];
+
+  //   console.log(item.startingField != "----" && item.startingField != null)
+
+  //   if (item.startingField != "----" && item.startingField != null) {
+  //     for (let i = 0; i < item.gridLength; i++) {
+  //       const pos = Number(item.startingField.slice(1)) + i;
+
+  //       if (item.gridWidth === 1) {
+  //         console.log(`${item.startingField[0]}${pos}`)
+  //         fieldsToSave.push(`${item.startingField[0]}${pos}`);
+  //       } else {
+  //         fieldsToSave.push(`${item.startingField[0]}${pos}`);
+  //         fieldsToSave.push(`B${pos}`);
+  //       }
+  //     }
+  //   }
+
+  //   // reset all 
+  //   this.itemList.update(items =>
+  //     items.map(el =>
+  //       el.id === item.id
+  //         ? {
+  //           ...el,
+  //           isOnTruck: true,   
+  //         }
+  //         : {
+  //           ...el,
+  //           startingField: "----",
+  //           truckNumber: null
+  //         }
+  //     )
+  //   );
+
+  //   // reset remaining items in itemList
+  //   // this.itemList().forEach(element => {
+  //   //   if (element.id === item.id ) {
+  //   //     console.log("This is the same item")
+  //   //   } else {
+  //   //     console.log("this is not the same item")
+  //   //     element.startingField = null;
+  //   //   }
+
+  //   //   console.log(this.itemList()[1].startingField, " starting field")
+
+  //   //   console.log(element.startingField, "element starting field")
+  //   // })
+
+  //   this.itemList.update(items =>
+  //     items.map(item => {
+  //       if (!item.startingField) return item;
+
+  //       const available = this.showFreeTruckSpace(
+  //         item.truckNumber,
+  //         item.gridWidth,
+  //         item.gridLength
+  //       );
+
+  //       if (!available.includes(item.startingField)) {
+  //         return { ...item, startingField: null };
+  //       }
+
+  //       return item;
+  //     })
+  //   );
+
+  //   const updatedTruckList = this.truckList().map(truck => {
+  //     if (truck.licensePlate !== item.truckNumber) return truck;
+
+  //     const updatedRows = { ...truck.rows };
+
+  //     fieldsToSave.forEach(field => {
+  //       const rowKey = field[0] as keyof typeof truck.rows;
+  //       const position = Number(field.slice(1)) as keyof typeof truck.rows.A;
+
+  //       updatedRows[rowKey] = {
+  //         ...updatedRows[rowKey],
+  //         [position]: {
+  //           ...updatedRows[rowKey][position],
+  //           ordersIds: item.id
+  //             ? [
+  //               ...(updatedRows[rowKey][position].ordersIds ?? []),
+  //               item.id
+  //             ]
+  //             : updatedRows[rowKey][position].ordersIds ?? []
+  //         }
+  //       };
+  //     });
+
+  //     return {
+  //       ...truck,
+  //       rows: updatedRows
+  //     };
+  //   });
+
+  //   this.truckList.set(updatedTruckList);
+  // }
+
+  removeItemFromTruck(item: Item) {
+    console.log("removing item")
+    console.log(item.startingField)
+  }
+
   showFreeTruckSpace(
     licensePlate: string | null | undefined,
     gridWidth: number | null | undefined,

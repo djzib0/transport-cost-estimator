@@ -15,10 +15,7 @@
 
   <!-- Rows -->
   @for (item of itemList(); track $index) {
-  <div class="grid grid-cols-9 gap-4 items-center px-4 py-3 rounded-lg shadow-sm hover:shadow-md transition"
-    (click)="selectItem(item)"
-    [ngClass]="item === selectedItem() ? 'bg-amber-300' : 'bg-white'"
-  >
+  <div class="grid grid-cols-9 gap-4 items-center px-4 py-3 rounded-lg shadow-sm hover:shadow-md transition">
 
     <!-- Name -->
     <div class="font-medium text-gray-800">
@@ -48,35 +45,68 @@
       {{ item.gridLength }}
     </div>
 
-      <select name="trucks" id="trucks" 
-        (change)="onTruckChange($event, $index)"
-        [value]="item.truckNumber"
-      >
-        <option [value]="null">----</option>
-        @for (truck of truckList(); track $index) {
-          <option [value]="truck.licensePlate">Truck {{$index + 1}}</option>
-        }
-      </select>
-      <select name="spaces" id="spaces" 
-        (change)="onSpaceChange($event, $index)"
-        [value]="item.startingField"
-      >
-        <option [value]="null">----</option>
-        @for (space of showFreeTruckSpace(item.truckNumber, item.gridWidth, item.gridLength); track $index) {
-          <option [value]="space">{{space}}</option>
-        }
-      </select>
+    @if (!item.isOnTruck) {
+    <select name="trucks" id="trucks" (change)="onTruckChange($event, $index)" [value]="item.truckNumber">
+      <option [value]="null">----</option>
+      @for (truck of truckList(); track $index) {
+      <option [value]="truck.licensePlate">Truck {{$index + 1}}</option>
+      }
+    </select>
+    <select name="spaces" id="spaces" (change)="onSpaceChange($event, $index)" [value]="item.startingField">
+      <option [value]="null">----</option>
+      @for (space of showFreeTruckSpace(item.truckNumber, item.gridWidth, item.gridLength); track $index) {
+      <option [value]="space">{{space}}</option>
+      }
+    </select>
+    }
 
     <!-- Actions -->
     <div class="flex justify-end gap-2">
-      <button class="text-sm px-3 py-1 bg-gray-100 hover:bg-gray-200 rounded-md"
-        (click)="saveItemOnTruck(item)"
-      >
+      <button class="text-sm px-3 py-1 bg-gray-100 hover:bg-gray-200 rounded-md" (click)="saveItemOnTruck(item)">
         Save
       </button>
       <button class="text-sm px-3 py-1 bg-red-100 text-red-600 hover:bg-red-200 rounded-md"
         (click)="openModal('Delete', 'Do you want to delete this item?', 'warning')">
         Delete
+      </button>
+    </div>
+
+    <div class="flex justify-end gap-2">
+      <!-- EYE ICON -->
+      <button class="text-sm px-3 py-1 rounded-md" [ngClass]="item === selectedItem() ? 'bg-amber-300' : 'bg-white'"
+        (click)="selectItem(item)">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round" width="24" height="24">
+          <!-- Eye outline -->
+          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12z"></path>
+
+          <!-- Pupil -->
+          <circle cx="12" cy="12" r="3"></circle>
+        </svg>
+      </button>
+
+      <!-- REMOVE FROM TRUCK ICON --> 
+       <!-- only when item is on truck -->
+      <button class="text-sm px-3 py-1 rounded-md"
+        (click)="item.isOnTruck ? removeItemFromTruck(item) : saveItemOnTruck(item)"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round" width="24" height="24">
+          <!-- Truck body -->
+          <rect x="1" y="6" width="15" height="10" rx="2"></rect>
+
+          <!-- Cabin -->
+          <path d="M16 10h4l2 3v3h-6z"></path>
+
+          <!-- Wheels -->
+          <circle cx="5.5" cy="18" r="2"></circle>
+          <circle cx="18.5" cy="18" r="2"></circle>
+
+          <!-- Cross line -->
+          @if (item.isOnTruck) {
+            <line x1="2" y1="2" x2="22" y2="22"></line>
+          }
+        </svg>
       </button>
     </div>
 
@@ -91,12 +121,8 @@
 <p> Selected truck is: {{selectedTruck()?.licensePlate}}</p>
 
 @for (truck of truckList(); track $index) {
-<app-truck-layout 
-  [truck]="truck" 
-  [selectedTruck]="selectedTruck()"
-  [selectedItem]="selectedItem()"
-  [itemList]="itemList()"
-  (sendSelectedTruck)="selectTruck($event)"></app-truck-layout>
+<app-truck-layout [truck]="truck" [selectedTruck]="selectedTruck()" [selectedItem]="selectedItem()"
+  [itemList]="itemList()" (sendSelectedTruck)="selectTruck($event)"></app-truck-layout>
 }
 
 @if (isModalOpen()) {

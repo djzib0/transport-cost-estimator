@@ -1,28 +1,21 @@
-<form 
-  [formGroup]="itemForm" 
-  (ngSubmit)="submit()" 
-  class="max-w-4xl mx-auto p-4 bg-white rounded-xl shadow-md space-y-4"
->
+<form [formGroup]="itemForm" (ngSubmit)="submit()"
+  class="max-w-4xl mx-auto p-4 bg-white rounded-xl shadow-md space-y-4">
   <h2 class="text-xl font-semibold text-gray-700">Transport Estimator</h2>
 
   <!-- Row with inputs -->
   <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
-    
+
     <!-- Name -->
     <div class="flex flex-col">
       <label class="text-xs font-medium text-gray-600">Name</label>
-      <input 
-        type="text" 
-        formControlName="name" 
-        placeholder="Item name"
+      <input type="text" formControlName="name" placeholder="Item name"
         class="border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-400"
-        [class.border-red-500]="itemForm.get('name')?.invalid && itemForm.get('name')?.touched"
-      />
+        [class.border-red-500]="itemForm.get('name')?.invalid && itemForm.get('name')?.touched" />
       <div class="min-h-4">
         @if (itemForm.get('name')?.invalid && itemForm.get('name')?.touched) {
-          <p class="text-red-500 text-xs mt-0">
-            Length is required
-          </p>
+        <p class="text-red-500 text-xs mt-0">
+          Length is required
+        </p>
         }
       </div>
     </div>
@@ -30,38 +23,29 @@
     <!-- Order number -->
     <div class="flex flex-col">
       <label class="text-xs font-medium text-gray-600">Order number</label>
-      <input 
-        type="text" 
-        formControlName="orderNumber" 
-        placeholder="Order number"
+      <input type="text" formControlName="orderNumber" placeholder="Order number"
         class="border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-400"
-        [class.border-red-500]="itemForm.get('orderNumber')?.invalid && itemForm.get('orderNumber')?.touched"
-      />
+        [class.border-red-500]="itemForm.get('orderNumber')?.invalid && itemForm.get('orderNumber')?.touched" />
       <div class="min-h-4">
         @if (itemForm.get('orderNumber')?.invalid && itemForm.get('orderNumber')?.touched) {
-          <p class="text-red-500 text-xs mt-0">
-            Length is required
-          </p>
+        <p class="text-red-500 text-xs mt-0">
+          Length is required
+        </p>
         }
       </div>
     </div>
-      
-      <!-- Width -->
-      <div class="flex flex-col">
-        <label class="text-xs font-medium text-gray-600">Width</label>
-        <input 
-        type="number" 
-        max="2400"
-        formControlName="width"
-        placeholder="0"
+
+    <!-- Width -->
+    <div class="flex flex-col">
+      <label class="text-xs font-medium text-gray-600">Width</label>
+      <input type="number" max="2400" formControlName="width" placeholder="0"
         class="border border-gray-300 rounded-md px-3 py-2 text-xs focus:ring-2 focus:ring-blue-400"
-        [class.border-red-500]="itemForm.get('width')?.invalid && itemForm.get('width')?.touched"
-      />
+        [class.border-red-500]="itemForm.get('width')?.invalid && itemForm.get('width')?.touched" />
       <div class="min-h-4">
         @if (itemForm.get('width')?.invalid && itemForm.get('width')?.touched) {
-          <p class="text-red-500 text-xs mt-0">
-            Length is required
-          </p>
+        <p class="text-red-500 text-xs mt-0">
+          Length is required
+        </p>
         }
       </div>
     </div>
@@ -69,18 +53,14 @@
     <!-- Length -->
     <div class="flex flex-col">
       <label class="text-xs font-medium text-gray-600">Length [mm]</label>
-      <input 
-        type="number" 
-        formControlName="length" 
-        placeholder="0"
+      <input type="number" formControlName="length" placeholder="0"
         class="border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-400"
-        [class.border-red-500]="itemForm.get('length')?.invalid && itemForm.get('length')?.touched"
-      />
+        [class.border-red-500]="itemForm.get('length')?.invalid && itemForm.get('length')?.touched" />
       <div class="min-h-4">
         @if (itemForm.get('length')?.invalid && itemForm.get('length')?.touched) {
-          <p class="text-red-500 text-xs mt-0">
-            Length is required
-          </p>
+        <p class="text-red-500 text-xs mt-0">
+          Length is required
+        </p>
         }
       </div>
     </div>
@@ -89,22 +69,21 @@
 
   <!-- Button aligned right -->
   <div class="flex justify-end">
-    <button 
-      type="submit"
-      class="bg-blue-500 hover:bg-blue-600 text-white text-sm font-semibold py-2 px-4 rounded-md shadow-sm transition"
-    >
+    <button type="submit"
+      class="bg-blue-500 hover:bg-blue-600 text-white text-sm font-semibold py-2 px-4 rounded-md shadow-sm transition">
       Calculate
     </button>
   </div>
 </form>
 
 <div class="flex flex-col gap-2">
-    Estimated transport cost is {{calculateTransportCost(itemForm.value.gridWidth, itemForm.value.gridLength) | currency:'PLN':'symbol':'1.2-2':'pl' }}
-    @for (item of  createArray(itemForm.value.gridWidth); track $index) {
-      <div class="flex gap-2">
-        @for (item of createArray(itemForm.value.gridLength); track $index) {
-          <div class="w-10 h-10 bg-green-300 rounded-md"></div>
-        }
-      </div>
+  Estimated transport cost is {{calculateTransportCost(itemForm.value.gridWidth, itemForm.value.gridLength) |
+  currency:'PLN':'symbol':'1.2-2':'pl' }}
+  @for (item of createArray(itemForm.value.gridWidth); track $index) {
+  <div class="flex gap-2">
+    @for (item of createArray(itemForm.value.gridLength); track $index) {
+    <div class="w-10 h-10 bg-green-300 rounded-md"></div>
     }
+  </div>
+  }
 </div>
