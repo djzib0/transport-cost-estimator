@@ -28,7 +28,7 @@ export class ItemForm {
     clientOrderNumber: null,
     gridWidth: 0,
     gridLength: 0,
-    truckNumber: "",
+    truckId: "",
   })
 
   palletPlacePricePln = signal(palletPlacePricePln)
@@ -44,7 +44,7 @@ export class ItemForm {
     clientOrderNumber: new FormControl(null),
     gridWidth: new FormControl(null),
     gridLength: new FormControl(null),
-    truckNumber: new FormControl(null),
+    truckId: new FormControl(null),
     startingField: new FormControl(null)
   })
 

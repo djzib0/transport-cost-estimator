@@ -37,18 +37,25 @@ export class TruckLayout {
     console.log(this.truck?.rows[row][col].ordersIds, " square data here")
   }
 
-  getOrderNumber(row: RowKey, col: Position): string[] | null | undefined {
-    let orderNumbers: string[] | null = [""]
-    this.truck?.rows[row]?.[col]?.ordersIds.forEach(id => {
-      this.itemList?.map(item => {
-        if (item.orderNumber && item.id === id) {
-          orderNumbers.push(item.orderNumber);
-        }
-      })
-    })
+  getOrderNumber(row: RowKey, col: Position): string[] | null {
+  const ids = this.truck?.rows[row]?.[col]?.ordersIds;
 
-    return orderNumbers;
-  }
+  // 👉 keep null if no data
+  if (!Array.isArray(ids)) return null;
+
+  const orderNumbers: string[] = [];
+
+  ids.forEach(id => {
+    const found = this.itemList?.find(item => item.id === id);
+
+    if (found?.orderNumber) {
+      orderNumbers.push(found.orderNumber);
+    }
+  });
+
+  // 👉 return null instead of empty array if nothing found
+  return orderNumbers.length > 0 ? orderNumbers : [];
+}
 
 
 }

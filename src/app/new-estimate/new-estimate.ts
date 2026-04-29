@@ -2,13 +2,13 @@ import { Component, signal } from '@angular/core';
 import { ItemForm } from "../../components/forms/itemForm/item-form/item-form";
 import { Item, ModalType, Position, RowKey, Truck } from '../../lib/interfaces';
 import { TruckLayout } from "../../components/truck-layout/truck-layout";
-import { areAdjacentFieldsEmpty, createEmptyTruck } from '../../lib/utils';
+import { areAdjacentFieldsEmpty, createEmptyTruck, generateId } from '../../lib/utils';
 import { Modal } from "../../components/modal/modal";
 import { ɵInternalFormsSharedModule } from "@angular/forms";
 import { NgClass } from '@angular/common';
 
 // TODO
-// add remove from truck logic
+// repair highlight item on truck
 
 
 @Component({
@@ -20,36 +20,37 @@ import { NgClass } from '@angular/common';
 export class NewEstimate {
 
   exampleTruck: Truck = {
+    id: generateId(),
     licensePlate: "GWE 3456",
     rows: {
       A: {
         // 1: { orderNumber: ["32334", "32332"] },
         1: { ordersIds: [] },
-        2: { ordersIds: []},
+        2: { ordersIds: [] },
         3: { ordersIds: [] },
-        4: { ordersIds: []},
-        5: { ordersIds: []},
-        6: { ordersIds: []},
-        7: { ordersIds: []},
-        8: { ordersIds: []},
-        9: { ordersIds: []},
-        10: { ordersIds: []},
-        11: { ordersIds: []},
-        12: { ordersIds: []}
+        4: { ordersIds: [] },
+        5: { ordersIds: [] },
+        6: { ordersIds: [] },
+        7: { ordersIds: [] },
+        8: { ordersIds: [] },
+        9: { ordersIds: [] },
+        10: { ordersIds: [] },
+        11: { ordersIds: [] },
+        12: { ordersIds: [] }
       },
       B: {
-        1: { ordersIds: []},
-        2: { ordersIds: []},
-        3: { ordersIds: []},
-        4: { ordersIds: []},
+        1: { ordersIds: [] },
+        2: { ordersIds: [] },
+        3: { ordersIds: [] },
+        4: { ordersIds: [] },
         5: { ordersIds: [] },
-        6: { ordersIds: []},
-        7: { ordersIds: []},
-        8: { ordersIds: []},
-        9: { ordersIds: []},
+        6: { ordersIds: [] },
+        7: { ordersIds: [] },
+        8: { ordersIds: [] },
+        9: { ordersIds: [] },
         10: { ordersIds: [] },
-        11: { ordersIds: []},
-        12: { ordersIds: []}
+        11: { ordersIds: [] },
+        12: { ordersIds: [] }
       }
     }
   }
@@ -65,28 +66,28 @@ export class NewEstimate {
     clientOrderNumber: null,
     gridWidth: 2, // keeps the number of pallete fields in truck grid row A
     gridLength: 3, // keeps the number of pallete fields in truck grid row B
-    truckNumber: "",
+    truckId: "",
     startingField: "----",
   }
 
   itemList = signal<Item[]>([
     this.exampleItem,
     {
-    id: "1234abcde!@",
-    name: "nozzle",
-    width: 400,
-    length: 1100,
-    isStacked: false,
-    isOnTruck: false,
-    orderNumber: "32146",
-    clientOrderNumber: null,
-    gridWidth: 1, // keeps the number of pallete fields in truck grid row A
-    gridLength: 1, // keeps the number of pallete fields in truck grid row B
-    truckNumber: "",
-    startingField: "----",
+      id: "1234abcde!@",
+      name: "nozzle",
+      width: 400,
+      length: 1100,
+      isStacked: false,
+      isOnTruck: false,
+      orderNumber: "32146",
+      clientOrderNumber: null,
+      gridWidth: 1, // keeps the number of pallete fields in truck grid row A
+      gridLength: 1, // keeps the number of pallete fields in truck grid row B
+      truckId: "",
+      startingField: "----",
     }
   ])
-  
+
   truckList = signal<Truck[]>([
     this.exampleTruck,
     // createEmptyTruck("GDA 1234")
@@ -118,7 +119,7 @@ export class NewEstimate {
     this.modalType.set("default");
     this.isModalOpen.set(false);
   }
-  
+
 
   addItem(item: Item) {
     const currentItemList = this.itemList();
@@ -133,33 +134,35 @@ export class NewEstimate {
   }
 
   onTruckChange(event: Event, index: number) {
-  const raw = (event.target as HTMLSelectElement).value;
-  const truckNumber = raw === "null" ? null : raw;
+    const raw = (event.target as HTMLSelectElement).value;
+    const truckId = raw === "null" ? null : raw;
 
-  this.itemList.update((list: Item[]) =>
-  list.map((item, i): Item => {
-    if (i === index) {
-      return {
-        ...item,
-        truckNumber,
-        startingField: null
-      };
-    }
+    console.log(truckId, 'i on truck change')
 
-    return item;
-  })
-);
-}
+    this.itemList.update((list: Item[]) =>
+      list.map((item, i): Item => {
+        if (i === index) {
+          return {
+            ...item,
+            truckId,
+            startingField: null
+          };
+        }
+
+        return item;
+      })
+    );
+  }
 
   onSpaceChange(event: Event, index: number) {
     const value = (event.target as HTMLSelectElement).value;
-    
-    this.itemList.update(list => 
+
+    this.itemList.update(list =>
       list.map((item, i) =>
-      i === index ? {...item, startingField: value } : item
+        i === index ? { ...item, startingField: value } : item
       )
     )
-    
+
   }
 
   selectTruck(truck: Truck) {
@@ -167,85 +170,80 @@ export class NewEstimate {
   }
 
   saveItemOnTruck(item: Item) {
-  console.log(`saving item ${item.name} from order ${item.orderNumber}`);
+    console.log(`saving item ${item.name} from order ${item.orderNumber}`);
 
-  const fieldsToSave: string[] = [];
+    const fieldsToSave: string[] = [];
 
-  console.log(item.startingField === "----")
+    console.log(item.startingField === "----")
 
-  const hasValidField =
-    item.startingField && item.startingField !== "----";
+    const hasValidField =
+      item.startingField && item.startingField !== "----";
 
-  if (!hasValidField) {
-    return; 
-  }
+    if (!hasValidField) {
+      return;
+    }
 
-  if (hasValidField && item.startingField != null) {
-    for (let i = 0; i < item.gridLength; i++) {
-      const pos = Number(item.startingField.slice(1)) + i;
+    if (hasValidField && item.startingField != null) {
+      for (let i = 0; i < item.gridLength; i++) {
+        const pos = Number(item.startingField.slice(1)) + i;
 
-      if (item.gridWidth === 1) {
-        fieldsToSave.push(`${item.startingField[0]}${pos}`);
-      } else {
-        fieldsToSave.push(`${item.startingField[0]}${pos}`);
-        fieldsToSave.push(`B${pos}`);
+        if (item.gridWidth === 1) {
+          fieldsToSave.push(`${item.startingField[0]}${pos}`);
+        } else {
+          fieldsToSave.push(`${item.startingField[0]}${pos}`);
+          fieldsToSave.push(`B${pos}`);
+        }
       }
     }
-  }
 
-  // ✅ Update item list (single, predictable update)
-  this.itemList.update(items =>
-    items.map(el => {
-      if (el.id === item.id) {
-        return {
-          ...el,
-          isOnTruck: true,
-          startingField: item.startingField,
-          truckNumber: item.truckNumber
-        };
-      }
+    // ✅ Update item list (single, predictable update)
+    this.itemList.update(items =>
+      items.map(el => {
+        if (el.id === item.id) {
+          return {
+            ...el,
+            isOnTruck: true,
+            startingField: item.startingField,
+            truckId: item.truckId
+          };
+        }
 
-      // reset other items
-      return {
-        ...el,
-        startingField: "----",
-        truckNumber: null
-      };
-    })
-  );
+        return el; // ✅ keep others unchanged
+      })
+    );
 
-  // ✅ Update truck
-  const updatedTruckList = this.truckList().map(truck => {
-    if (truck.licensePlate !== item.truckNumber) return truck;
+    // ✅ Update truck
+    const updatedTruckList = this.truckList().map(truck => {
+      if (truck.id !== item.truckId) return truck;
 
-    const updatedRows = { ...truck.rows };
+      const updatedRows = { ...truck.rows };
 
-    fieldsToSave.forEach(field => {
-      const rowKey = field[0] as keyof typeof truck.rows;
-      const position = Number(field.slice(1)) as keyof typeof truck.rows.A;
+      fieldsToSave.forEach(field => {
+        const rowKey = field[0] as keyof typeof truck.rows;
+        const position = Number(field.slice(1)) as keyof typeof truck.rows.A;
 
-      updatedRows[rowKey] = {
-        ...updatedRows[rowKey],
-        [position]: {
-          ...updatedRows[rowKey][position],
-          ordersIds: item.id
-            ? [
+        updatedRows[rowKey] = {
+          ...updatedRows[rowKey],
+          [position]: {
+            ...updatedRows[rowKey][position],
+            ordersIds: item.id
+              ? [
                 ...(updatedRows[rowKey][position].ordersIds ?? []),
                 item.id
               ]
-            : updatedRows[rowKey][position].ordersIds ?? []
-        }
+              : updatedRows[rowKey][position].ordersIds ?? []
+          }
+        };
+      });
+
+      return {
+        ...truck,
+        rows: updatedRows
       };
     });
 
-    return {
-      ...truck,
-      rows: updatedRows
-    };
-  });
-
-  this.truckList.set(updatedTruckList);
-}
+    this.truckList.set(updatedTruckList);
+  }
 
   // saveItemOnTruck(item: Item) {
   //   console.log(`saving item ${item.name} from order ${item.orderNumber}`);
@@ -279,7 +277,7 @@ export class NewEstimate {
   //         : {
   //           ...el,
   //           startingField: "----",
-  //           truckNumber: null
+  //           truckId: null
   //         }
   //     )
   //   );
@@ -303,7 +301,7 @@ export class NewEstimate {
   //       if (!item.startingField) return item;
 
   //       const available = this.showFreeTruckSpace(
-  //         item.truckNumber,
+  //         item.truckId,
   //         item.gridWidth,
   //         item.gridLength
   //       );
@@ -317,7 +315,7 @@ export class NewEstimate {
   //   );
 
   //   const updatedTruckList = this.truckList().map(truck => {
-  //     if (truck.licensePlate !== item.truckNumber) return truck;
+  //     if (truck.licensePlate !== item.truckId) return truck;
 
   //     const updatedRows = { ...truck.rows };
 
@@ -349,61 +347,134 @@ export class NewEstimate {
   // }
 
   removeItemFromTruck(item: Item) {
-    console.log("removing item")
-    console.log(item.startingField)
+    console.log(`removing item ${item.truckId} from truck`);
+
+    const fieldsToClear: string[] = [];
+
+    const hasValidField =
+      item.startingField && item.startingField !== "----";
+
+    if (!hasValidField) {
+      return;
+    }
+
+    // 🔹 Build same positions as in save
+    for (let i = 0; i < item.gridLength; i++) {
+      const pos = Number(item.startingField?.slice(1)) + i;
+
+      if (item.gridWidth === 1 && item.startingField) {
+        fieldsToClear.push(`${item.startingField[0]}${pos}`);
+      } else if (item.startingField) {
+        fieldsToClear.push(`${item.startingField[0]}${pos}`);
+        fieldsToClear.push(`B${pos}`);
+      }
+    }
+
+
+
+    // ✅ Update truck (REMOVE id instead of adding)
+    const updatedTruckList = this.truckList().map(truck => {
+      if (truck.id !== item.truckId) return truck;
+
+      const updatedRows = { ...truck.rows };
+
+      fieldsToClear.forEach(field => {
+        const rowKey = field[0] as keyof typeof truck.rows;
+        const position = Number(field.slice(1)) as keyof typeof truck.rows.A;
+
+        const currentIds =
+          updatedRows[rowKey][position].ordersIds ?? [];
+
+        const filteredIds = currentIds.filter(id => id !== item.id);
+
+        updatedRows[rowKey] = {
+          ...updatedRows[rowKey],
+          [position]: {
+            ...updatedRows[rowKey][position],
+            ordersIds: filteredIds.length > 0 ? filteredIds : null
+          }
+        };
+      });
+
+      return {
+        ...truck,
+        rows: updatedRows
+      };
+    });
+
+    this.truckList.set(updatedTruckList);
+
+    this.itemList.update(items =>
+      items.map(el => {
+        if (el.id === item.id) {
+          return {
+            ...el,
+            isOnTruck: false,
+            startingField: "----",
+            truckId: null
+          };
+        }
+
+        return el;
+      })
+    );
   }
 
   showFreeTruckSpace(
-    licensePlate: string | null | undefined,
+    truckId: string | null | undefined,
     gridWidth: number | null | undefined,
     gridLength: number | null | undefined,
   ) {
+
     const truck = this.truckList().find(truck => {
-      return truck.licensePlate === licensePlate
-    })
+      return truck.id === truckId;
+    });
 
-    let freeSpaces: string[] = []
+    if (!truck || !gridWidth || !gridLength) return [];
 
-    const positions: Position[] = [1,2,3,4,5,6,7,8,9,10,11,12];
+    // helper → treat null as empty array
+    const getIds = (cell: any): string[] =>
+      Array.isArray(cell?.ordersIds) ? cell.ordersIds : [];
+
+    let freeSpaces: string[] = [];
+
+    const positions: Position[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
     // const rowKeys: RowKey[] = gridWidth === 2 ? ['A'] : ['A', 'B']
-    const rowKeys: RowKey[] = ['A', 'B']
-    
+    const rowKeys: RowKey[] = ['A', 'B'];
+
     if (gridWidth === 2) {
       for (let rowKey of rowKeys) {
         for (let pos of positions) {
-          // console.log(truck?.rows[rowKey][pos], `${rowKey}${pos} <-- position`)
-          // console.log(truck?.rows[rowKey][pos], `${rowKey}${pos} <-- position`)
+
+          // check if field is empty + if adjacent fields are empty
           if (
-            (gridWidth && gridLength) 
-            && truck?.rows[rowKey][pos].ordersIds.length === 0
-            && areAdjacentFieldsEmpty(truck, rowKey, pos, gridWidth, gridLength)
+            getIds(truck.rows[rowKey][pos]).length === 0 &&
+            areAdjacentFieldsEmpty(truck, rowKey, pos, gridWidth, gridLength)
           ) {
-            freeSpaces.push(`${rowKey}${pos}`)
+            freeSpaces.push(`${rowKey}${pos}`);
           }
-        };
-      };
+        }
+      }
 
       // when gridWidth is 2, we take only row A coordinates
-      const filteredFreeSpaces: string[] = freeSpaces.filter(item => !item.includes("B"))
-      
-      return filteredFreeSpaces || [];
+      const filteredFreeSpaces: string[] = freeSpaces.filter(item => !item.includes("B"));
+
+      return filteredFreeSpaces;
 
     } else if (gridWidth === 1) {
-        for (let rowKey of rowKeys) {
-          for (let pos of positions) {
-            // console.log(truck?.rows[rowKey][pos], `${rowKey}${pos} <-- position`)
-            // console.log(truck?.rows[rowKey][pos], `${rowKey}${pos} <-- position`)
-    
-            if (
-              (gridWidth && gridLength) 
-              && truck?.rows[rowKey][pos].ordersIds.length === 0
-              && areAdjacentFieldsEmpty(truck, rowKey, pos, gridWidth, gridLength)
-            ) {
-              freeSpaces.push(`${rowKey}${pos}`)
-            }
-          };
-        };
-    };    
+      for (let rowKey of rowKeys) {
+        for (let pos of positions) {
+
+          // check if field is empty + if adjacent fields are empty
+          if (
+            getIds(truck.rows[rowKey][pos]).length === 0 &&
+            areAdjacentFieldsEmpty(truck, rowKey, pos, gridWidth, gridLength)
+          ) {
+            freeSpaces.push(`${rowKey}${pos}`);
+          }
+        }
+      }
+    }
 
     return freeSpaces;
   }

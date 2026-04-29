@@ -9,7 +9,7 @@ export interface Item {
     clientOrderNumber?: string | null;
     gridWidth: number | 0; // keeps the number of pallete fields in truck grid row A
     gridLength: number | 0; // keeps the number of pallete fields in truck grid row B
-    truckNumber?: string | "" | null;
+    truckId?: string | "" | null;
     startingField?: string | null | "----";
 
 }
@@ -43,6 +43,7 @@ export type Row = Record<Position, RowCell>;
 export type Rows = Record<RowKey, Row>;
 
 export interface Truck {
+    id: string;
     licensePlate?: string;
     rows: Record<RowKey, Record<Position, RowCell>>;
 }
