@@ -8,7 +8,8 @@ import { ɵInternalFormsSharedModule } from "@angular/forms";
 import { NgClass } from '@angular/common';
 
 // TODO
-// repair highlight item on truck
+// add saving to excel file
+// add uploading data to excel file
 
 
 @Component({

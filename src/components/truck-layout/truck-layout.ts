@@ -27,10 +27,13 @@ export class TruckLayout {
   }
 
   checkIsSelected(row: RowKey, col: Position) {
-    if (this.selectedItem?.id && this.truck?.rows[row]?.[col]?.ordersIds.includes(this.selectedItem?.id)) {
-      return true
+    const ids = this.truck?.rows[row]?.[col]?.ordersIds;
+
+    if (!this.selectedItem?.id || !Array.isArray(ids)) {
+      return false;
     }
-    return false
+
+    return ids.includes(this.selectedItem.id);
   }
 
   showData(row: RowKey, col: Position ) {
